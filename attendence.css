@@ -1,0 +1,197 @@
+body {
+  margin: 0;
+  font-family: 'Orbitron', sans-serif;
+  background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
+  color: #0ff;
+  overflow-x: hidden;
+}
+
+.login-container, .dashboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.neon-box, .popup-switch {
+  background: #111;
+  border: 2px solid #0ff;
+  padding: 20px;
+  margin: 10px;
+  border-radius: 15px;
+  box-shadow: 0 0 15px #0ff;
+}
+
+.neon-button {
+  background: #0ff;
+  border: none;
+  padding: 10px 20px;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #0ff;
+}
+
+.neon-button:hover {
+  background: #000;
+  color: #0ff;
+  box-shadow: 0 0 25px #0ff;
+}
+
+.popup-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  width: 80%;
+  margin-top: 40px;
+}
+
+.popup-switch {
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.3s;
+}
+
+.popup-switch:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px #0ff;
+}
+
+.hidden {
+  display: none;
+}
+
+h1, h2 {
+  text-shadow: 0 0 10px #0ff;
+}
+
+section {
+  padding: 20px;
+}
+
+/* Neon Switch Styles */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 30px;
+  margin: 0 10px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #222;
+  border: 2px solid #0ff;
+  box-shadow: 0 0 10px #0ff;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 3px;
+  background-color: #0ff;
+  box-shadow: 0 0 10px #0ff;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #0ff;
+  box-shadow: 0 0 20px #0ff;
+}
+
+input:checked + .slider:before {
+  transform: translateX(30px);
+  background-color: #000;
+  box-shadow: 0 0 5px #000;
+}
+
+.toggle-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 5px 0;
+}
+
+.note-input {
+  width: 150px;
+  padding: 5px;
+  border-radius: 5px;
+  background: #222;
+  color: #0ff;
+  border: 1px solid #0ff;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.history-table th, .history-table td {
+  border: 1px solid #0ff;
+  padding: 10px;
+  text-align: center;
+}
+
+.filters {
+  margin: 10px 0;
+}
+
+.stats-summary {
+  margin: 15px 0;
+  padding: 10px;
+  background-color: #111;
+  border: 1px solid #0ff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #0ff;
+  text-align: center;
+}
+
+input, select {
+  background: #222;
+  color: #0ff;
+  border: 1px solid #0ff;
+  padding: 5px;
+  margin: 5px;
+  border-radius: 5px;
+}
+
+#studentList {
+  margin: 20px 0;
+}
+
+.student-item {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  padding: 10px;
+  background: #111;
+  border-radius: 10px;
+  border: 1px solid #0ff;
+  box-shadow: 0 0 5px #0ff;
+}
+
+.status-label {
+  min-width: 80px;
+  margin: 0 10px;
+}
