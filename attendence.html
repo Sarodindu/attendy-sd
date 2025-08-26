@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Neon Switch Attendance System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+      background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
+      color: #0ff;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+      padding-bottom: 40px;
+      box-sizing: border-box;
+    }
+
+    .login-container, .dashboard {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    .neon-box, .popup-switch {
+      background: #111;
+      border: 2px solid #0ff;
+      padding: 20px;
+      margin: 10px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px #0ff;
+    }
+
+    .neon-button {
+      background: #0ff;
+      border: none;
+      padding: 10px 20px;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #0ff;
+      margin: 5px;
+    }
+
+    .neon-button:hover {
+      background: #000;
+      color: #0ff;
+      box-shadow: 0 0 25px #0ff;
+    }
+
+    .popup-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      width: 80%;
+      margin-top: 40px;
+    }
+
+    .popup-switch {
+      cursor: pointer;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+
+    .popup-switch:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px #0ff;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    h1, h2 {
+      text-shadow: 0 0 10px #0ff;
+    }
+
+    section {
+      padding: 20px;
+      min-height: 80vh;
+      width: 90%;
+      max-width: 1200px;
+      margin: 20px auto;
+      background: rgba(17, 17, 17, 0.9);
+      border-radius: 15px;
+      border: 2px solid #0ff;
+      box-shadow: 0 0 20px #0ff;
+    }
+
+    /* Neon Switch Styles */
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 30px;
+      margin: 0 10px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #222;
+      border: 2px solid #0ff;
+      box-shadow: 0 0 10px #0ff;
+      transition: .4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      bottom: 3px;
+      background-color: #0ff;
+      box-shadow: 0 0 10px #0ff;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #0ff;
+      box-shadow: 0 0 20px #0ff;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(30px);
+      background-color: #000;
+      box-shadow: 0 0 5px #000;
+    }
+
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 15px 0;
+      padding: 10px;
+      background: rgba(34, 34, 34, 0.7);
+      border-radius: 8px;
+      border: 1px solid #0ff;
+    }
+
+    .note-input {
+      width: 150px;
+      padding: 8px;
+      border-radius: 5px;
+      background: #222;
+      color: #0ff;
+      border: 1px solid #0ff;
+      box-shadow: 0 0 5px #0ff;
+    }
+
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    .history-table th, .history-table td {
+      border: 1px solid #0ff;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .history-table th {
+      background: rgba(0, 255, 255, 0.1);
+    }
+
+    .filters {
+      margin: 20px 0;
+      padding: 15px;
+      background: rgba(34, 34, 34, 0.7);
+      border-radius: 10px;
+      border: 1px solid #0ff;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .stats-summary {
+      margin: 20px 0;
+      padding: 15px;
+      background-color: #111;
+      border: 1px solid #0ff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #0ff;
+      text-align: center;
+      font-size: 1.2em;
+    }
+
+    input, select {
+      background: #222;
+      color: #0ff;
+      border: 1px solid #0ff;
+      padding: 8px;
+      margin: 5px;
+      border-radius: 5px;
+      box-shadow: 0 0 5px #0ff;
+    }
+
+    #studentList {
+      margin: 20px 0;
+    }
+
+    .student-item {
+      display: flex;
+      align-items: center;
+      margin: 15px 0;
+      padding: 15px;
+      background: rgba(34, 34, 34, 0.7);
+      border-radius: 10px;
+      border: 1px solid #0ff;
+      box-shadow: 0 0 5px #0ff;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .status-label {
+      min-width: 100px;
+      margin: 0 10px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #0ff;
+      padding-bottom: 15px;
+    }
+
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      color: #0ff;
+      font-size: 12px;
+      text-shadow: 0 0 5px #0ff;
+    }
+
+    /* Routine Table Styles */
+    .routine-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    
+    .routine-table th, .routine-table td {
+      border: 1px solid #0ff;
+      padding: 12px;
+      text-align: center;
+    }
+    
+    .routine-table th {
+      background: rgba(0, 255, 255, 0.1);
+    }
+    
+    .routine-table tr:hover {
+      background: rgba(0, 255, 255, 0.05);
+    }
+    
+    .routine-form {
+      background: rgba(34, 34, 34, 0.7);
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid #0ff;
+      margin-bottom: 20px;
+    }
+    
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 15px;
+      align-items: center;
+    }
+    
+    .form-row label {
+      min-width: 100px;
+    }
+    
+    .take-attendance-btn {
+      background: #0ff;
+      color: #000;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    
+    .take-attendance-btn:hover {
+      background: #000;
+      color: #0ff;
+    }
+  </style>
+</head>
+<body>
+  <!-- Login Page -->
+  <div id="loginPage" class="login-container">
+    <div class="neon-box">
+      <h1>🔐 Login</h1>
+      <div class="toggle-container">
+        <label>Role:</label>
+        <select id="loginRole">
+          <option value="Teacher">Teacher</option>
+          <option value="Admin">Admin</option>
+        </select>
+      </div>
+      <div class="toggle-container">
+        <label>Username:</label>
+        <input type="text" id="loginUsername" placeholder="Enter username">
+      </div>
+      <div class="toggle-container">
+        <label>Password:</label>
+        <input type="password" id="loginPassword" placeholder="Enter password">
+      </div>
+      <div style="text-align: center; margin-top: 20px;">
+        <button class="neon-button" onclick="login()">Login</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard Page -->
+  <div id="dashboardPage" class="dashboard hidden">
+    <h1>Welcome, <span id="userWelcome"></span></h1>
+    <div class="popup-grid">
+      <div class="popup-switch" onclick="showSection('attendanceSection')">
+        <h2>📝 Take Attendance</h2>
+        <p>Mark student attendance</p>
+      </div>
+      <div class="popup-switch" onclick="showSection('routineSection')">
+        <h2>📅 Class Routine</h2>
+        <p>Manage class schedule</p>
+      </div>
+      <div class="popup-switch" onclick="showSection('historySection')">
+        <h2>📖 View History</h2>
+        <p>Check attendance records</p>
+      </div>
+      <div class="popup-switch" onclick="logout()">
+        <h2>🚪 Logout</h2>
+        <p>Exit the system</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Attendance Section -->
+  <section id="attendanceSection" class="hidden">
+    <div class="section-header">
+      <h2>📝 Take Attendance</h2>
+      <button class="neon-button" onclick="goHome()">Back to Dashboard</button>
+    </div>
+    
+    <div class="filters">
+      <label>Class:</label>
+      <select id="classSelect">
+        <option value="Class A">Class A</option>
+        <option value="Class B">Class B</option>
+        <option value="Class C">Class C</option>
+      </select>
+      <label>Date:</label>
+      <input type="date" id="attendanceDate">
+    </div>
+
+    <div id="studentList">
+      <div class="student-item">
+        <label class="toggle-switch">
+          <input type="checkbox" id="student1" checked>
+          <span class="slider"></span>
+        </label>
+        <span class="status-label">John Doe</span>
+        <select class="status-select">
+          <option value="Present">Present</option>
+          <option value="Absent">Absent</option>
+          <option value="Late">Late</option>
+          <option value="Excused">Excused</option>
+        </select>
+        <input type="text" class="note-input" placeholder="Note">
+      </div>
+      <div class="student-item">
+        <label class="toggle-switch">
+          <input type="checkbox" id="student2" checked>
+          <span class="slider"></span>
+        </label>
+        <span class="status-label">Jane Smith</span>
+        <select class="status-select">
+          <option value="Present">Present</option>
+          <option value="Absent">Absent</option>
+          <option value="Late">Late</option>
+          <option value="Excused">Excused</option>
+        </select>
+        <input type="text" class="note-input" placeholder="Note">
+      </div>
+      <div class="student-item">
+        <label class="toggle-switch">
+          <input type="checkbox" id="student3" checked>
+          <span class="slider"></span>
+        </label>
+        <span class="status-label">Mike Johnson</span>
+        <select class="status-select">
+          <option value="Present">Present</option>
+          <option value="Absent">Absent</option>
+          <option value="Late">Late</option>
+          <option value="Excused">Excused</option>
+        </select>
+        <input type="text" class="note-input" placeholder="Note">
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button class="neon-button" onclick="markAllPresent()">Mark All Present</button>
+      <button class="neon-button" onclick="clearAll()">Clear All</button>
+      <button class="neon-button" onclick="submitAttendance()">Submit Attendance</button>
+    </div>
+  </section>
+
+  <!-- Routine Section -->
+  <section id="routineSection" class="hidden">
+    <div class="section-header">
+      <h2>📅 Class Routine</h2>
+      <button class="neon-button" onclick="goHome()">Back to Dashboard</button>
+    </div>
+    
+    <div class="routine-form">
+      <h3>Add New Class</h3>
+      <div class="form-row">
+        <label for="className">Class Name:</label>
+        <input type="text" id="className" placeholder="e.g., Mathematics 101">
+        
+        <label for="classDay">Day:</label>
+        <select id="classDay">
+          <option value="Monday">Monday</option>
+          <option value="Tuesday">Tuesday</option>
+          <option value="Wednesday">Wednesday</option>
+          <option value="Thursday">Thursday</option>
+          <option value="Friday">Friday</option>
+          <option value="Saturday">Saturday</option>
+          <option value="Sunday">Sunday</option>
+        </select>
+      </div>
+      
+      <div class="form-row">
+        <label for="startTime">Start Time:</label>
+        <input type="time" id="startTime">
+        
+        <label for="endTime">End Time:</label>
+        <input type="time" id="endTime">
+        
+        <button class="neon-button" onclick="addClass()">Add Class</button>
+      </div>
+    </div>
+    
+    <h3>Weekly Schedule</h3>
+    <table class="routine-table">
+      <thead>
+        <tr>
+          <th>Time/Day</th>
+          <th>Monday</th>
+          <th>Tuesday</th>
+          <th>Wednesday</th>
+          <th>Thursday</th>
+          <th>Friday</th>
+          <th>Saturday</th>
+          <th>Sunday</th>
+        </tr>
+      </thead>
+      <tbody id="routineTableBody">
+        <!-- Routine will be populated here -->
+      </tbody>
+    </table>
+  </section>
+
+  <!-- History Section -->
+  <section id="historySection" class="hidden">
+    <div class="section-header">
+      <h2>📖 Attendance History</h2>
+      <button class="neon-button" onclick="goHome()">Back to Dashboard</button>
+    </div>
+    
+    <div class="filters">
+      <label>Filter by Date:</label>
+      <input type="date" id="filterDate">
+      <label>Class:</label>
+      <select id="filterClass">
+        <option value="All">All</option>
+        <option value="Class A">Class A</option>
+        <option value="Class B">Class B</option>
+        <option value="Class C">Class C</option>
+      </select>
+      <label>Student:</label>
+      <input type="text" id="filterStudent" placeholder="Enter student name">
+      <label>Status:</label>
+      <select id="filterStatus">
+        <option value="All">All</option>
+        <option value="Present">Present</option>
+        <option value="Absent">Absent</option>
+        <option value="Late">Late</option>
+        <option value="Excused">Excused</option>
+      </select>
+      <button class="neon-button" onclick="filterHistory()">Apply Filter</button>
+    </div>
+
+    <div class="stats-summary" id="summaryStats">
+      Summary: Present: 2 | Absent: 1 | Late: 0 | Excused: 0
+    </div>
+
+    <table class="history-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Class</th>
+          <th>Student</th>
+          <th>Status</th>
+          <th>Note</th>
+        </tr>
+      </thead>
+      <tbody id="historyTableBody">
+        <tr>
+          <td>2025-04-05</td>
+          <td>Class A</td>
+          <td>John Doe</td>
+          <td>Present</td>
+          <td>On time</td>
+        </tr>
+        <tr>
+          <td>2025-04-05</td>
+          <td>Class A</td>
+          <td>Jane Smith</td>
+          <td>Absent</td>
+          <td>Sick leave</td>
+        </tr>
+        <tr>
+          <td>2025-04-04</td>
+          <td>Class B</td>
+          <td>Mike Johnson</td>
+          <td>Present</td>
+          <td>Participated</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="text-align: center; margin-top: 20px;">
+      <button class="neon-button" onclick="exportCSV()">Export CSV</button>
+    </div>
+  </section>
+
+  <footer>
+    Made with love by Sarodindu Das © 2025
+  </footer>
+
+  <script>
+    let currentUser = null;
+    let classRoutine = [];
+
+    function login() {
+      const role = document.getElementById('loginRole').value;
+      const username = document.getElementById('loginUsername').value;
+      const password = document.getElementById('loginPassword').value;
+
+      if (!username || !password) {
+        alert("Please enter both username and password");
+        return;
+      }
+
+      currentUser = {
+        role,
+        username,
+        password,
+        name: username.charAt(0).toUpperCase() + username.slice(1)
+      };
+
+      document.getElementById('loginPage').classList.add('hidden');
+      document.getElementById('dashboardPage').classList.remove('hidden');
+      document.getElementById('userWelcome').textContent = `${currentUser.name} (${currentUser.role})`;
+      
+      // Initialize routine table
+      generateRoutineTable();
+    }
+
+    function logout() {
+      currentUser = null;
+      document.querySelectorAll('section').forEach(sec => sec.classList.add('hidden'));
+      document.getElementById('dashboardPage').classList.add('hidden');
+      document.getElementById('loginPage').classList.remove('hidden');
+      document.getElementById('loginUsername').value = '';
+      document.getElementById('loginPassword').value = '';
+    }
+
+    function showSection(sectionId) {
+      document.querySelectorAll('section').forEach(sec => sec.classList.add('hidden'));
+      document.getElementById('dashboardPage').classList.add('hidden');
+      document.getElementById(sectionId).classList.remove('hidden');
+    }
+
+    function goHome() {
+      document.querySelectorAll('section').forEach(sec => sec.classList.add('hidden'));
+      document.getElementById('dashboardPage').classList.remove('hidden');
+    }
+
+    function markAllPresent() {
+      const checkboxes = document.querySelectorAll('#studentList input[type="checkbox"]');
+      const statusSelects = document.querySelectorAll('#studentList .status-select');
+      
+      checkboxes.forEach(box => box.checked = true);
+      statusSelects.forEach(select => select.value = "Present");
+    }
+
+    function clearAll() {
+      const checkboxes = document.querySelectorAll('#studentList input[type="checkbox"]');
+      const statusSelects = document.querySelectorAll('#studentList .status-select');
+      const noteInputs = document.querySelectorAll('#studentList .note-input');
+      
+      checkboxes.forEach(box => box.checked = false);
+      statusSelects.forEach(select => select.value = "Present");
+      noteInputs.forEach(input => input.value = "");
+    }
+
+    function submitAttendance() {
+      const classSelected = document.getElementById('classSelect').value;
+      const dateSelected = document.getElementById('attendanceDate').value;
+      
+      if (!dateSelected) {
+        alert("Please select a date");
+        return;
+      }
+      
+      // In a real app, you would send this data to a server
+      alert("✅ Attendance saved successfully!");
+      goHome();
+    }
+
+    function filterHistory() {
+      const date = document.getElementById('filterDate').value;
+      const className = document.getElementById('filterClass').value;
+      const studentName = document.getElementById('filterStudent').value.toLowerCase();
+      const status = document.getElementById('filterStatus').value;
+
+      const rows = document.querySelectorAll('#historyTableBody tr');
+      let summary = { Present: 0, Absent: 0, Late: 0, Excused: 0 };
+
+      rows.forEach(row => {
+        const cells = Array.from(row.children);
+        const rDate = cells[0].textContent;
+        const rClass = cells[1].textContent.toLowerCase();
+        const rStudent = cells[2].textContent.toLowerCase();
+        const rStatus = cells[3].textContent.toLowerCase();
+        
+        const matchesDate = !date || rDate.includes(date);
+        const matchesClass = className === 'All' || rClass === className.toLowerCase();
+        const matchesStudent = !studentName || rStudent.includes(studentName);
+        const matchesStatus = status === 'All' || rStatus === status.toLowerCase();
+
+        const show = matchesDate && matchesClass && matchesStudent && matchesStatus;
+        row.style.display = show ? '' : 'none';
+
+        if (show) {
+          const statusKey = rStatus.charAt(0).toUpperCase() + rStatus.slice(1);
+          if (summary.hasOwnProperty(statusKey)) {
+            summary[statusKey]++;
+          }
+        }
+      });
+
+      document.getElementById('summaryStats').textContent = 
+        `Summary: Present: ${summary.Present} | Absent: ${summary.Absent} | Late: ${summary.Late} | Excused: ${summary.Excused}`;
+    }
+
+    function exportCSV() {
+      const visibleRows = Array.from(document.querySelectorAll("#historyTableBody tr"))
+        .filter(row => row.style.display !== 'none');
+      
+      if (visibleRows.length === 0) {
+        alert("No data to export!");
+        return;
+      }
+
+      let csvContent = "data:text/csv;charset=utf-8,Date,Class,Student,Status,Note\n";
+      visibleRows.forEach(row => {
+        let rowData = Array.from(row.children).map(td => `"${td.textContent}"`).join(",");
+        csvContent += rowData + "\n";
+      });
+      
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "attendance_history.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Class Routine Functions
+    function addClass() {
+      const className = document.getElementById('className').value;
+      const classDay = document.getElementById('classDay').value;
+      const startTime = document.getElementById('startTime').value;
+      const endTime = document.getElementById('endTime').value;
+      
+      if (!className || !startTime || !endTime) {
+        alert("Please fill all fields");
+        return;
+      }
+      
+      classRoutine.push({
+        className,
+        day: classDay,
+        startTime,
+        endTime
+      });
+      
+      // Clear form
+      document.getElementById('className').value = '';
+      document.getElementById('startTime').value = '';
+      document.getElementById('endTime').value = '';
+      
+      // Update table
+      generateRoutineTable();
+      
+      alert("Class added to routine!");
+    }
+    
+    function generateRoutineTable() {
+      const tableBody = document.getElementById('routineTableBody');
+      tableBody.innerHTML = '';
+      
+      // Generate time slots (8 AM to 6 PM)
+      for (let hour = 8; hour <= 18; hour++) {
+        const row = document.createElement('tr');
+        
+        // Time cell
+        const timeCell = document.createElement('td');
+        const timeFormatted = `${hour}:00 - ${hour + 1}:00`;
+        timeCell.textContent = timeFormatted;
+        row.appendChild(timeCell);
+        
+        // Day cells
+        const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        days.forEach(day => {
+          const dayCell = document.createElement('td');
+          
+          // Check if there's a class at this time on this day
+          const classAtThisTime = classRoutine.find(cls => 
+            cls.day === day && 
+            parseInt(cls.startTime.split(':')[0]) === hour
+          );
+          
+          if (classAtThisTime) {
+            dayCell.innerHTML = `
+              <div style="background: rgba(0, 255, 255, 0.1); padding: 5px; border-radius: 5px;">
+                <strong>${classAtThisTime.className}</strong><br>
+                ${classAtThisTime.startTime} - ${classAtThisTime.endTime}
+                <button class="take-attendance-btn" onclick="takeAttendanceForClass('${classAtThisTime.className}')">
+                  Take Attendance
+                </button>
+              </div>
+            `;
+          }
+          
+          row.appendChild(dayCell);
+        });
+        
+        tableBody.appendChild(row);
+      }
+    }
+    
+    function takeAttendanceForClass(className) {
+      // Set the class in the attendance section
+      document.getElementById('classSelect').value = className;
+      
+      // Show the attendance section
+      showSection('attendanceSection');
+      
+      // Set today's date
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('attendanceDate').value = today;
+    }
+
+    // Set default date to today
+    document.addEventListener('DOMContentLoaded', function() {
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('attendanceDate').value = today;
+      document.getElementById('filterDate').value = today;
+    });
+  </script>
+</body>
+</html>
